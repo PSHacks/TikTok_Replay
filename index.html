@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TikTok Итоги 2025 года">
+    
+    <title>TikTok: Итоги 2025 года</title>
+    
+    <!-- Tailwind CSS (precompiled) -->
+	<link rel="stylesheet" href="tailwind.css">
+</head>
+<body>
+
+    <!-- Модальное окно -->
+    <div id="auth-modal" onclick="closeAuthModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-icon-circle text-2xl">🔒</div>
+            <h2 class="text-xl font-bold mb-3">Авторизуйтесь</h2>
+            <p class="text-sm text-gray-400 mb-8 leading-relaxed px-4">
+                Ваша статистика защищена. Пожалуйста, подтвердите вход через Telegram.
+            </p>
+            <a id="tg-button" href="#" target="_blank" class="block w-full text-white font-bold py-3.5 text-base transition-all hover:brightness-110 active:scale-95 mb-4 flex items-center justify-center gap-3">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                Войти в Telegram
+            </a>
+            <button onclick="hideAuthModal()" class="text-xs text-gray-500 font-bold hover:text-white uppercase tracking-widest transition-colors">Позже</button>
+        </div>
+    </div>
+
+    <!-- 1. Экран ввода -->
+    <div id="welcome-screen">
+        <div class="glow-cyan"></div>
+        <div class="glow-magenta"></div>
+        <div class="logo-box mb-2">
+            <img src="https://i.postimg.cc/MKRbf5y6/vecteezy-tiktok-white-wordmark-logo-icon-tiktok-app-transparent-65386727.png" alt="TikTok Logo" class="tiktok-svg">
+        </div>
+        <h1 class="text-3xl font-bold mb-6">Твои итоги 2025</h1>
+        <p class="text-gray-400 mb-8 text-center max-w-xs">Введите ссылку на профиль, чтобы сформировать итоги года</p>
+        <div class="w-full max-w-sm flex flex-col gap-2">
+            <input type="text" id="tiktok-link" placeholder="tiktok.com/@username" class="w-full bg-white/5 border border-white/10 rounded-lg px-5 py-4 text-lg focus:outline-none focus:border-pink-500 transition-colors">
+            <p id="error-message" class="text-xs text-[#FE2C55] h-4 opacity-0 transition-opacity">Неверный формат ссылки</p>
+            <button onclick="startAnalysis()" class="w-full bg-[#FE2C55] hover:bg-[#ef2950] text-white font-bold py-4 rounded-lg text-lg transition-transform active:scale-95 shadow-lg">
+                Сформировать
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. Экран загрузки -->
+    <div id="loading-screen" style="display: none; visibility: hidden; opacity: 0;">
+        <div class="tt-loader"></div>
+        <div id="loading-text" class="text-2xl font-bold text-white mb-2">Анализ...</div>
+        <div id="loading-subtext" class="loading-status text-xs uppercase tracking-widest text-gray-500">Обработка данных</div>
+        <div class="loading-bar-container">
+            <div id="loading-progress"></div>
+        </div>
+    </div>
+
+    <!-- 3. Основной контент -->
+    <div id="content-screen">
+        <div class="progress-bar" id="progressBar"></div>
+
+        <div class="snap-container" id="container">
+            <!-- Интро слайд -->
+            <section class="slide">
+                <div class="glow-cyan"></div>
+                <div class="glow-magenta"></div>
+                <div class="logo-box mb-2">
+                    <img src="https://i.postimg.cc/MKRbf5y6/vecteezy-tiktok-white-wordmark-logo-icon-tiktok-app-transparent-65386727.png" alt="TikTok Logo" class="tiktok-svg">
+                </div>
+                <h1 class="text-4xl font-extrabold mb-4">Итоги 2025</h1>
+                <p class="text-xl text-gray-400">Ваша история готова</p>
+                <div class="absolute animate-bounce opacity-50 text-sm tracking-widest uppercase" style="bottom: 15%;">Листай вниз ↓</div>
+            </section>
+
+            <!-- Слайды статистики -->
+            <section class="slide">
+                <div class="icon-box">👀</div>
+                <div class="stat-wrapper">
+                    <div class="stat-value" id="stat-views" data-value="0">0</div>
+                    <div class="label">Видео просмотрено вами за 2025 год</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="icon-box">🔥</div>
+                <div class="stat-wrapper">
+                    <div class="stat-value" id="stat-streak" data-value="0">0</div>
+                    <div class="label">Дней — ваш самый длинный стрик («огонек»)</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="icon-box">❤️</div>
+                <div class="stat-wrapper">
+                    <div class="stat-value" id="stat-likes" data-value="0">0</div>
+                    <div class="label">Раз вы поставили лайк</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="icon-box">🔖</div>
+                <div class="stat-wrapper">
+                    <div class="stat-value" id="stat-bookmarks" data-value="0">0</div>
+                    <div class="label">Видео сохранено в избранное</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="icon-box">👤</div>
+                <div class="stat-wrapper">
+                    <div class="text-3xl font-bold mb-2 blur-text">@creators_hub</div>
+                    <div class="label">Ваш любимый автор года</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <section class="slide">
+                <div class="icon-box">🌈</div>
+                <div class="stat-wrapper">
+                    <div class="text-4xl font-bold mb-2 text-cyan-400 blur-text">#Trends2025</div>
+                    <div class="label">Ваш главный вайб года</div>
+                    <button onclick="showAuthModal()" class="reveal-btn">Узнать</button>
+                </div>
+            </section>
+
+            <!-- Финал -->
+            <section class="slide">
+                <div class="glow-cyan"></div>
+                <div class="glow-magenta"></div>
+                <h2 class="text-3xl font-bold mb-6">Это был крутой 2025-й!</h2>
+                <button onclick="window.location.reload()" class="px-8 py-3 bg-[#FE2C55] rounded-lg font-bold text-lg shadow-lg hover:scale-105 transition-transform mb-12">
+                    Сначала
+                </button>
+                <div class="logo-box mb-4 opacity-80" style="width: 160px;">
+                    <img src="https://i.postimg.cc/MKRbf5y6/vecteezy-tiktok-white-wordmark-logo-icon-tiktok-app-transparent-65386727.png" alt="TikTok Logo" class="tiktok-svg">
+                </div>
+                <p class="text-gray-500 text-xs uppercase tracking-widest">TikTok Recap © 2025</p>
+            </section>
+        </div>
+    </div>
+
+	<script type="text/javascript" src="base.js"></script>
+</body>
+</html>
